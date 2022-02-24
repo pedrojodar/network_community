@@ -186,6 +186,6 @@ with open('properties.json', 'r') as f:
   data = json.load(f)
 
 print (data)
-user='pedrojjs97'
+user='pedrojodar_'
 n = obtain_info(data)
 #follower, followings =your_network(user)
