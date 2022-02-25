@@ -8,7 +8,8 @@ class Network :
         return set(list(set(series_id_1).intersection(set(series_id_2))))
     def __init__ (self, user):
         self.user=user
-        res = open('followers.txt').read().split('\n')
+        print (self.user)
+        res = open('stored_data/followers'+user+'.txt').read().split('\n')
         self.result=[]
         for i in range(len(res)):
             self.result.append(res[i].split('\t'))
@@ -97,29 +98,31 @@ class Network :
 
 
         
-        #nx.draw(G2, node_color=color, with_labels=True)
-        nx.draw(G2, node_color=color)
+        nx.draw(G2, node_color=color, with_labels=True)
 
         plt.show()
         
+def plot_Graph ():
+    import json
+    with open("message.json", "r") as j:
+        mydata = json.load(j) 
+
+    n = Network(mydata['user'])
+    n.print_report()
+    c_final, centrality = n.select_communities()
 
 
-n = Network('pedrojjs97')
-n.print_report()
-c_final, centrality = n.select_communities()
+    f=open('stored_data/Community'+ mydata['user']+'.txt','w')
+    for i in range (len(c_final)):
+        f.write('Community '+str(i)+'\n')
+        for j in range (len(c_final[i])):
+            f.write (list(c_final[i])[j])
+            f.write('\n')
+        f.write ('\n'+'\n'+'\n')
+    f.close()
 
-
-f=open('community.txt','w')
-for i in range (len(c_final)):
-    f.write('Community '+str(i)+'\n')
-    for j in range (len(c_final[i])):
-        f.write (list(c_final[i])[j])
-        f.write('\n')
-    f.write ('\n'+'\n'+'\n')
-f.close()
-
-f=open('Centrality.txt', 'w')
-for i in list(centrality.keys()):
-    f.write(str(i)+'\t'+str(centrality[i])+'\n')
-f.close()
-n.print_communities(c_final)
+    f=open('stored_data/Centrality'+ mydata['user']+'.txt', 'w')
+    for i in list(centrality.keys()):
+        f.write(str(i)+'\t'+str(centrality[i])+'\n')
+    f.close()
+    n.print_communities(c_final)
